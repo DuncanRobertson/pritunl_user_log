@@ -87,8 +87,7 @@ while True:
              timeconnected = time.asctime(time.localtime(client['connected_since'] - time.timezone))
              printl("disconnect %-17s real_address %-15s virt_address %-19s connected_since %s mac_addr %s" % \
                 (client['username'][0],client['real_address'],client['virt_address'],timeconnected,client['mac_addr']))
-      if not syslogmode:
-         sys.stdout.flush()
+      sys.stdout.flush()
 
    previousclients = currentclients
    if whomode:
