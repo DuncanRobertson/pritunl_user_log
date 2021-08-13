@@ -3,6 +3,8 @@ pritunl_user_log
 
 This is a simple python3 script to generate a log of connected clients for a [Pritunl](https://pritunl.com/) VPN system.
 
+There is also a simple script to print the email addresses of connected pritunl users, or all pritunl users, seperated by commas for pasting into an email program.
+
 I recently moved from [OpenVPN Access Server](https://openvpn.net/access-server/) to the PRITUNL Premium subscription, and this has met all my requirements fairly well except for not having a running log of who has logged into the system. 
 
 The Pritunl "Enterprise" subscription has a comprehensive auditing feature, but the Premium subscription and free version only shows the currently logged in users in the web UI.

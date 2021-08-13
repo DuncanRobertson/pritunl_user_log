@@ -33,14 +33,15 @@ if len(sys.argv) > 1:
 %s [ who | syslog | stdout ]
    run continually, printing logged in users to stdout for logging, with one or more options
 %s who
-   run once printing a list of users currently logged in to stdout
+   run once printing a list of users currently logged in to stdout (default with no args)
 %s syslog
    run continually, logging logged in users to syslog for logging
 %s stdout 
-   run continually, logging to stdout (default with no args)
+   run continually, logging to stdout
 ''' % (sys.argv[0],sys.argv[0],sys.argv[0],sys.argv[0]))
       sys.exit(1)
 else:
+   whomode = True
    stdoutmode = True
 
 
