@@ -14,6 +14,7 @@ mydb = myclient['pritunl']
 
 allusers = False
 currentusers = False
+userlistcsv = False
 
 if len(sys.argv) > 1:
    if "allusers" in sys.argv[1:]:
@@ -22,13 +23,18 @@ if len(sys.argv) > 1:
    if "currentusers" in sys.argv[1:]:
       currentusers = True
 
+   if "userlistcsv" in sys.argv[1:]:
+      userlistcsv = True
+
    if not allusers and not currentusers:
       print('''pritunl user mail list, usage:
    %s allusers
       list email addresses of all users, seperated by commas (default no args)
    %s currentusers
       list email addresses of all users connected to pritunl now, seperated by commas
-''' % (sys.argv[0],sys.argv[0]))
+   %s (allusers|currentusers) userlistcsv
+      output as csv with username
+''' % (sys.argv[0],sys.argv[0],sys.argv[0]))
       sys.exit(1)
 else:
    allusers = True
@@ -54,25 +60,36 @@ if currentusers:
    currentclients = list(mydb.clients.aggregate(pipeline))
    sys.stdout.write("# email addresses of user accounts currently logged into PRITUNL\n")
    firstclient = True
+   if userlistcsv:
+      sys.stdout.write("%s,%s\n" % ("username","email"))
    for client in currentclients:
-      if firstclient:
-         sys.stdout.write("%s" % client['email'][0])
-         firstclient = False
+      if userlistcsv:
+         sys.stdout.write("%s,%s\n" % (client['username'][0],client['email'][0]))
       else:
-         sys.stdout.write(", %s" % client['email'][0])
-      
-   sys.stdout.write("\n")
+         if firstclient:
+            sys.stdout.write("%s" % client['email'][0])
+            firstclient = False
+         else:
+            sys.stdout.write(", %s" % client['email'][0])
+   if not userlistcsv:      
+      sys.stdout.write("\n")
 
 if allusers:
    allusers = list(mydb.users.find({},{ "_id": 0, "name": 1, "email": 1}))
 
    sys.stdout.write("# email addresses of all PRITUNL user accounts\n")
    firstclient = True
+   if userlistcsv:
+      sys.stdout.write("%s,%s\n" % ("username","email"))
    for user in allusers:
       if not user['email'] == None:
-         if firstclient:
-            sys.stdout.write("%s" % user['email'])
-            firstclient = False
+         if userlistcsv:
+            sys.stdout.write("%s,%s\n" % (user['name'],user['email']))
          else:
-            sys.stdout.write(", %s" % user['email'])
-   sys.stdout.write("\n")
+            if firstclient:
+               sys.stdout.write("%s" % user['email'])
+               firstclient = False
+            else:
+               sys.stdout.write(", %s" % user['email'])
+   if not userlistcsv:
+      sys.stdout.write("\n")
